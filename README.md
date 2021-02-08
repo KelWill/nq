@@ -10,9 +10,9 @@ cat example.json | jq -c .[] | nq --reduce [] '(acc, {friends}) => acc.concat(fr
 
 ## why? `jq` needs a friend
 
-I know there are people out there who have learned how to write complex `jq` programs, and are even later able to read the program that they had written. `jq` is an amazing, wonderful, life-saving tool, but because I only need it every few weeks, I have major problems remembering the syntax, and I'll often need to leave the shell to deal with more complex JSON. Leaving the shell when you're in the middle of writing a pipeline or exploring some data is a real shame!
+I know there are people out there who have learned how to write complex `jq` programs, and are even later able to read the programs that they've written. `jq` is an amazing, wonderful, life-saving tool, but because I only need it every few weeks, I have major problems remembering the syntax, and I'll often need to leave the shell to deal with more complex JSON. Leaving the shell when you're in the middle of writing a pipeline or exploring some data is a real shame!
 
-I've finally given up hope of ever learning `jq` properly, so instead I've started using `jq` to stick data into a workable state, and then manipulating it with `nodejs` functions. The core of the code to make that happen is simple:
+I've finally given up hope of ever learning `jq` properly, so instead I've started using `jq` to munge data into a workable state, and then manipulating it with `nodejs` functions. The core of the code to make that happen is simple:
 
 ```js
 #!/usr/bin/env node
@@ -54,21 +54,21 @@ For more complex examples, let's take a look at some of the highest upvoted `jq`
 
 Given an array of objects with locations, how do we filter them by one of their properties?
 
-`jq`: `jq '.[] | select(.location=="Stockholm")'`
-`nq`: `nq -f '({location}) => location === "Stockholm"'`
+- `jq`: `jq '.[] | select(.location=="Stockholm")'`
+- `nq`: `nq -f '({location}) => location === "Stockholm"'`
 
 2. [How to filter an array based on value in inner array?](https://stackoverflow.com/questions/26701538/how-to-filter-an-array-of-objects-based-on-values-in-an-inner-array-with-jq/26701851#26701851)
 
 Given data with a shape of `Array<{Id: string, Names: string[]}>`, filter `Id` based on the presence of a string containing `"data"` in the `Names` array.
 
-`jq`: `jq -r . - map(select(.Names[] | contains ("data"))) | .[] .Id`
-`nq`: `jq -c .[] | nq -f '({Names}) => Names.every((n) => !n.includes("data"))' | nq -o '({Id}) => Id''` (or in a more lodash functional style `nq --filter '_.flow( _.get("Names"), _.find(n => !n.match(/data/)) )' | nq -o '_.get("Id")`)
+- `jq`: `jq -r . - map(select(.Names[] | contains ("data"))) | .[] .Id`
+- `nq`: `jq -c .[] | nq -f '({Names}) => Names.every((n) => !n.includes("data"))' | nq -o '({Id}) => Id''` (or in a more lodash functional style `nq --filter '_.flow( _.get("Names"), _.find(n => !n.match(/data/)) )' | nq -o '_.get("Id")`)
 
 3. [How to format multiple fields from a JSON document into a single string?](https://stackoverflow.com/questions/28164849/using-jq-to-parse-and-display-multiple-fields-in-a-json-serially/31418194#31418194)
 
 Given data that looks like `{users: Array<{first: string, last: string}>}`, output `${first} ${last}`
 
-`jq`: `jq -r '.users[] | "\(.first) \(.last)"'`
-`nq`: `jq -c .users[] | nq -o '({first, last}) => `${first} ${last}`'`
+- `jq`: `jq -r '.users[] | "\(.first) \(.last)"'`
+- `nq`: `jq -c .users[] | nq -o '({first, last}) => `${first} ${last}`'`
 
-Note that for all of these cases, `jq` is much more terse, is required for `nq` to even do anything at all, and if we were processing a significant amount of data, I'd expect it to be much faster. `nq` is much worse than `jq` in every way except offering familiar `nodejs` syntax, but familiar syntax counts for a lot!
+Note that for all of these cases, `jq` is much more terse, is required for `nq` to even do anything at all, and if we were processing a significant amount of data, I'd expect `jq` to be much faster. `nq` is worse than `jq` in every way except offering familiar `nodejs` syntax, but familiar syntax is a big deal!
