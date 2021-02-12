@@ -1,6 +1,6 @@
 {
   "name": "node-fn-query",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "keywords": ["jq", "shell", "bash", "json"],
   "description": "replace \"jq .key\" with \"nq '({key}) => key'\"",
   "main": "index.js",
