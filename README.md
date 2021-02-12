@@ -32,8 +32,11 @@ Just those few lines of code stuck somewhere appropriate in your PATH can make i
 
 The default mode is mapping over the input values: `seq 1 100 | nq 'n => n * n'`, but you can change that to either `reduce` the values or `filter` the values.
 
-  - `--reduce` (`-r`) allows you to reduce `stdin` to a single value. It takes a value as its second parameter `seq 1 100 | nq -r 0 '(sum, n) => sum + n' # returns the sum` or `seq 1 20 | nq -r [] '(acc, n) => acc.concat(n)' # sticks the input into an array`
-  - `--filter` (`-f`) allows to filter `stdin`: `seq 1 100 | nq -f '(n) => n % 2' # prints odd numbers`
+  - `--reduce` (`-r`) allows you to reduce `stdin` to a single value. It takes a value as its second parameter:
+    - `seq 1 100 | nq -r 0 '(sum, n) => sum + n' # returns the sum`
+    - `seq 1 20 | nq -r [] '(acc, n) => acc.concat(n)' # sticks the input into an array`
+  - `--filter` (`-f`) allows to filter `stdin`:
+    - `seq 1 100 | nq -f '(n) => n % 2' # prints odd numbers`
 
 By default, `nq` attempts to `JSON.parse` the input values & `JSON.stringify` the output values:
 
@@ -62,7 +65,8 @@ Given an array of objects with locations, how do we filter them by one of their 
 Given data with a shape of `Array<{Id: string, Names: string[]}>`, filter `Id` based on the presence of a string containing `"data"` in the `Names` array.
 
 - `jq`: `jq -r '. - map(select(.Names[] | contains ("data"))) | .[] .Id'`
-- `nq`: `jq -c .[] | nq -f '({Names}) => Names.every((n) => !n.includes("data"))' | nq -o '({Id}) => Id'` (or in a more lodash functional style `nq --filter '_.flow( _.get("Names"), _.find(n => !n.match(/data/)) )' | nq -o '_.get("Id")`)
+- `nq`: `jq -c .[] | nq --filter '({Names}) => Names.every((n) => !n.includes("data"))' | nq -o '({Id}) => Id'`
+- `nq` with a lodash functional style: `nq --filter '_.flow( _.get("Names"), _.find(n => !n.match(/data/)) )' | nq -o '_.get("Id")`)
 
 3. [How to format multiple fields from a JSON document into a single string?](https://stackoverflow.com/questions/28164849/using-jq-to-parse-and-display-multiple-fields-in-a-json-serially/31418194#31418194)
 
