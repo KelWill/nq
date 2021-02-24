@@ -18,7 +18,7 @@ I've finally given up hope of ever learning `jq` properly, so instead I've start
 #!/usr/bin/env node
 const fn = eval([].slice.call(process.argv, 2).join(" "));
 require("readline")
-  .createInterface({input: process.stdin})
+  .createInterface({ input: process.stdin })
   .on("line", (v) => console.log(fn(JSON.parse(v))));
 ```
 
@@ -32,20 +32,20 @@ Just those few lines of code stuck somewhere appropriate in your PATH can make i
 
 The default mode is mapping over the input values: `seq 1 100 | nq 'n => n * n'`, but you can change that to either `reduce` the values or `filter` the values.
 
-  - `--reduce` (`-r`) allows you to reduce `stdin` to a single value. It takes a value as its second parameter:
-    - `seq 1 100 | nq -r 0 '(sum, n) => sum + n' # returns the sum`
-    - `seq 1 20 | nq -r [] '(acc, n) => acc.concat(n)' # sticks the input into an array`
-  - `--filter` (`-f`) allows to filter `stdin`:
-    - `seq 1 100 | nq -f '(n) => n % 2' # prints odd numbers`
+- `--reduce` (`-r`) allows you to reduce `stdin` to a single value. It takes a value as its second parameter:
+  - `seq 1 100 | nq -r 0 '(sum, n) => sum + n' # returns the sum`
+  - `seq 1 20 | nq -r [] '(acc, n) => acc.concat(n)' # sticks the input into an array`
+- `--filter` (`-f`) allows to filter `stdin`:
+  - `seq 1 100 | nq -f '(n) => n % 2' # prints odd numbers`
 
 By default, `nq` attempts to `JSON.parse` the input values & `JSON.stringify` the output values:
 
-  - `--string-input` (`-i`): don't `JSON.parse` input lines. Useful if you want to use this to process strings
-  - `--raw-output`: don't `JSON.stringify` output lines. Useful if you want to feed string values into another shell script
+- `--string-input` (`-i`): don't `JSON.parse` input lines. Useful if you want to use this to process strings
+- `--raw-output`: don't `JSON.stringify` output lines. Useful if you want to feed string values into another shell script
 
 [lodash](https://lodash.com/) is included, and by default functional-style [`lodash/fp`](https://github.com/lodash/lodash/wiki/FP-Guide) is available as `_`. The more functional lodash style lends itself to writing `nq '_.get(["key", 0])'` rather than the slightly more verbose `nq '(v) => _.get(v, ["key", 0])'`.
 
-  - `not-fp`: `_` will be regular `lodash` rather than `lodash/fp`.
+- `not-fp`: `_` will be regular `lodash` rather than `lodash/fp`.
 
 - `this` will be a consistent object that starts as `{}`. Using `this` to store state is generally a sign that you should be `reducing` OR using a more fully-fleshed tool instead.
 
