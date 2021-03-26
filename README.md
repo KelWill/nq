@@ -73,6 +73,6 @@ Given data with a shape of `Array<{Id: string, Names: string[]}>`, filter `Id` b
 Given data that looks like `{users: Array<{first: string, last: string}>}`, output `${first} ${last}`
 
 - `jq`: `jq -r '.users[] | "\(.first) \(.last)"'`
-- `nq`: `jq -c .users[] | nq -o '({first, last}) => `${first} ${last}`'`
+- `nq`: ```jq -c .users[] | nq -o '({first, last}) => `${first} ${last}`'```
 
 Note that for all of these cases, `jq` is much more terse, is required for `nq` to even do anything at all, and if we were processing a significant amount of data, I'd expect `jq` to be much faster. `nq` is worse than `jq` in every way except offering familiar `nodejs` syntax, but familiar syntax is a big deal!
