@@ -41,7 +41,7 @@ The default mode is mapping over the input values: `seq 1 100 | nq 'n => n * n'`
 By default, `nq` attempts to `JSON.parse` the input values & `JSON.stringify` the output values:
 
 - `--string-input` (`-i`): don't `JSON.parse` input lines. Useful if you want to use this to process strings
-- `--raw-output`: don't `JSON.stringify` output lines. Useful if you want to feed string values into another shell script
+- `--raw-output` (`-o`): don't `JSON.stringify` output lines. Useful if you want to feed string values into another shell script
 
 [lodash](https://lodash.com/) is included, and by default functional-style [`lodash/fp`](https://github.com/lodash/lodash/wiki/FP-Guide) is available as `_`. The more functional lodash style lends itself to writing `nq '_.get(["key", 0])'` rather than the slightly more verbose `nq '(v) => _.get(v, ["key", 0])'`.
 
