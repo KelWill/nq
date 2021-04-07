@@ -51,7 +51,15 @@ const shouldParseJSON = !argv["string-input"];
 global._ = argv["not-fp"] ? require("lodash") : require("lodash/fp");
 
 const context = {};
-const fn = eval(argv._[0]).bind(context);
+
+if (!argv._[0]) {
+  throw new Error("unable to find function to run? did you provide an invalid option? run nq --help to see available options");
+}
+let fn = eval(argv._[0])
+if (typeof fn !== "function") {
+  throw new Error(`${fn} is a '${typeof fn}' not a function`);
+}
+fn = fn.bind(context);
 
 const rl = readline.createInterface({
   input: process.stdin,
